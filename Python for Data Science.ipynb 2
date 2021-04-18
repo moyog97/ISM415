@@ -1,0 +1,1532 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    ">>>> # Problem: Sales Data"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<img src = 'img.jpg'>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**A company in the U.S asked us to help them analyze their one year data, so as to enable them make better decision the coming year.\n",
+    "They are interested in the following.**\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "- What was the best month for sales? how much was earned that month?\n",
+    "- What Product sold more?\n",
+    "- What time should we display advertisements to maximize likelihood of customer's buying product?\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    ">>>> ## Steps"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**For this problem, we will perform three basic steps**"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "+ Data Importation\n",
+    "+ Data Cleaning\n",
+    "+ Data Analysis\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Step 1: Data Importation"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "First we need to import the libraries for this analysis before moving on to import the data. the first library we will be using is the `Pandas` library, and we can import it using the `import` keyword, then we initialize it to `pd`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "To start, create a new folder in your working directory and call it `Sales_Data`, then download and copy the data to that folder. \n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "###### Reading CSV files"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Pandas makes reading of csv files very easy, all you need to do is to simply use the `.read_csv()` function in pandas and pass in the name of the dataset enclosed in strings and the format.\n",
+    "Let’s try to read one of the sales data and see how it works.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data = pd.read_csv('Sales_Data/Sales_January_2019.csv')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "To see the first few rows in your data, we simply use the `head()` method.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Order ID</th>\n",
+       "      <th>Product</th>\n",
+       "      <th>Quantity Ordered</th>\n",
+       "      <th>Price Each</th>\n",
+       "      <th>Order Date</th>\n",
+       "      <th>Purchase Address</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>141234</td>\n",
+       "      <td>iPhone</td>\n",
+       "      <td>1</td>\n",
+       "      <td>700</td>\n",
+       "      <td>01/22/19 21:25</td>\n",
+       "      <td>944 Walnut St, Boston, MA 02215</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>141235</td>\n",
+       "      <td>Lightning Charging Cable</td>\n",
+       "      <td>1</td>\n",
+       "      <td>14.95</td>\n",
+       "      <td>01/28/19 14:15</td>\n",
+       "      <td>185 Maple St, Portland, OR 97035</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>141236</td>\n",
+       "      <td>Wired Headphones</td>\n",
+       "      <td>2</td>\n",
+       "      <td>11.99</td>\n",
+       "      <td>01/17/19 13:33</td>\n",
+       "      <td>538 Adams St, San Francisco, CA 94016</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>141237</td>\n",
+       "      <td>27in FHD Monitor</td>\n",
+       "      <td>1</td>\n",
+       "      <td>149.99</td>\n",
+       "      <td>01/05/19 20:33</td>\n",
+       "      <td>738 10th St, Los Angeles, CA 90001</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>141238</td>\n",
+       "      <td>Wired Headphones</td>\n",
+       "      <td>1</td>\n",
+       "      <td>11.99</td>\n",
+       "      <td>01/25/19 11:59</td>\n",
+       "      <td>387 10th St, Austin, TX 73301</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  Order ID                   Product Quantity Ordered Price Each  \\\n",
+       "0   141234                    iPhone                1        700   \n",
+       "1   141235  Lightning Charging Cable                1      14.95   \n",
+       "2   141236          Wired Headphones                2      11.99   \n",
+       "3   141237          27in FHD Monitor                1     149.99   \n",
+       "4   141238          Wired Headphones                1      11.99   \n",
+       "\n",
+       "       Order Date                       Purchase Address  \n",
+       "0  01/22/19 21:25        944 Walnut St, Boston, MA 02215  \n",
+       "1  01/28/19 14:15       185 Maple St, Portland, OR 97035  \n",
+       "2  01/17/19 13:33  538 Adams St, San Francisco, CA 94016  \n",
+       "3  01/05/19 20:33     738 10th St, Los Angeles, CA 90001  \n",
+       "4  01/25/19 11:59          387 10th St, Austin, TX 73301  "
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Now that we have seen how to read a single `csv` file, let’s now see how we can read all the csv files in our Sales_Data folder at once."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import glob\n",
+    "\n",
+    "path = './Sales_Data' #use your path\n",
+    "all_files = glob.glob(path + \"/*.csv\")\n",
+    "\n",
+    "li = []\n",
+    "\n",
+    "for filename in all_files:\n",
+    "    df = pd.read_csv(filename, index_col= None, header=0)\n",
+    "    li.append(df)\n",
+    "    \n",
+    "data = pd.concat(li, axis=0, ignore_index=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Order ID</th>\n",
+       "      <th>Product</th>\n",
+       "      <th>Quantity Ordered</th>\n",
+       "      <th>Price Each</th>\n",
+       "      <th>Order Date</th>\n",
+       "      <th>Purchase Address</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>176558</td>\n",
+       "      <td>USB-C Charging Cable</td>\n",
+       "      <td>2</td>\n",
+       "      <td>11.95</td>\n",
+       "      <td>4/19/2019 8:46</td>\n",
+       "      <td>917 1st St, Dallas, TX 75001</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>176559</td>\n",
+       "      <td>Bose SoundSport Headphones</td>\n",
+       "      <td>1</td>\n",
+       "      <td>99.99</td>\n",
+       "      <td>4/7/2019 22:30</td>\n",
+       "      <td>682 Chestnut St, Boston, MA 02215</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>176560</td>\n",
+       "      <td>Google Phone</td>\n",
+       "      <td>1</td>\n",
+       "      <td>600</td>\n",
+       "      <td>4/12/2019 14:38</td>\n",
+       "      <td>669 Spruce St, Los Angeles, CA 90001</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>176560</td>\n",
+       "      <td>Wired Headphones</td>\n",
+       "      <td>1</td>\n",
+       "      <td>11.99</td>\n",
+       "      <td>4/12/2019 14:38</td>\n",
+       "      <td>669 Spruce St, Los Angeles, CA 90001</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  Order ID                     Product Quantity Ordered Price Each  \\\n",
+       "0   176558        USB-C Charging Cable                2      11.95   \n",
+       "1      NaN                         NaN              NaN        NaN   \n",
+       "2   176559  Bose SoundSport Headphones                1      99.99   \n",
+       "3   176560                Google Phone                1        600   \n",
+       "4   176560            Wired Headphones                1      11.99   \n",
+       "\n",
+       "        Order Date                      Purchase Address  \n",
+       "0   4/19/2019 8:46          917 1st St, Dallas, TX 75001  \n",
+       "1              NaN                                   NaN  \n",
+       "2   4/7/2019 22:30     682 Chestnut St, Boston, MA 02215  \n",
+       "3  4/12/2019 14:38  669 Spruce St, Los Angeles, CA 90001  \n",
+       "4  4/12/2019 14:38  669 Spruce St, Los Angeles, CA 90001  "
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(186850, 6)"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.shape"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Step 2: Data Cleaning\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In doing exploratory data analysis, or even data science in general 70%  of your time is spent understanding and cleaning the data, so let’s see how we can clean up our data in order to make it useful for analysis.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The first thing we check for in our data is if it contains missing values, to do that we simply use `isnull()`, then to count the number of missing values that exists in each column, we simply use `sum()`.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "###### Checking for missing values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Order ID            545\n",
+       "Product             545\n",
+       "Quantity Ordered    545\n",
+       "Price Each          545\n",
+       "Order Date          545\n",
+       "Purchase Address    545\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.isnull().sum()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Notice that we have 545 missing values in each of our column. The next thing we do is to remove those missing values from our dataset. To do that, we use the `dropna()` function. After dropping the missing values, we check our data again for missing values.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "###### Droping missing values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data.dropna(how='any', inplace=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Order ID            0\n",
+       "Product             0\n",
+       "Quantity Ordered    0\n",
+       "Price Each          0\n",
+       "Order Date          0\n",
+       "Purchase Address    0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.isnull().sum()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "To get the summary statistics of our data, we simply use ‘describe()’.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Order ID</th>\n",
+       "      <th>Product</th>\n",
+       "      <th>Quantity Ordered</th>\n",
+       "      <th>Price Each</th>\n",
+       "      <th>Order Date</th>\n",
+       "      <th>Purchase Address</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>count</th>\n",
+       "      <td>186305</td>\n",
+       "      <td>186305</td>\n",
+       "      <td>186305</td>\n",
+       "      <td>186305</td>\n",
+       "      <td>186305</td>\n",
+       "      <td>186305</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>unique</th>\n",
+       "      <td>178438</td>\n",
+       "      <td>20</td>\n",
+       "      <td>10</td>\n",
+       "      <td>24</td>\n",
+       "      <td>142396</td>\n",
+       "      <td>140788</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>top</th>\n",
+       "      <td>Order ID</td>\n",
+       "      <td>USB-C Charging Cable</td>\n",
+       "      <td>1</td>\n",
+       "      <td>11.95</td>\n",
+       "      <td>Order Date</td>\n",
+       "      <td>Purchase Address</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>freq</th>\n",
+       "      <td>355</td>\n",
+       "      <td>21903</td>\n",
+       "      <td>168552</td>\n",
+       "      <td>21903</td>\n",
+       "      <td>355</td>\n",
+       "      <td>355</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "        Order ID               Product Quantity Ordered Price Each  \\\n",
+       "count     186305                186305           186305     186305   \n",
+       "unique    178438                    20               10         24   \n",
+       "top     Order ID  USB-C Charging Cable                1      11.95   \n",
+       "freq         355                 21903           168552      21903   \n",
+       "\n",
+       "        Order Date  Purchase Address  \n",
+       "count       186305            186305  \n",
+       "unique      142396            140788  \n",
+       "top     Order Date  Purchase Address  \n",
+       "freq           355               355  "
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.describe()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Using the describe function give us the summary statistic of the columns in our dataset. Now let’s take a look at how we can index rows and columns in pandas dataframe.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "###### Indexing in Dataframe"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "To index a column in pandas dataframe is very easy, all we have to do is call the variable name for the data, then enclose the column name in quote and insert it into a square bracket. This hence create a pandas series. For instance, say we want to index the ‘Product’ column in our dataframe, we simply do this: `data[‘Product’]`, where data is our variable name for the dataset.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0               USB-C Charging Cable\n",
+       "2         Bose SoundSport Headphones\n",
+       "3                       Google Phone\n",
+       "4                   Wired Headphones\n",
+       "5                   Wired Headphones\n",
+       "                     ...            \n",
+       "186845        AAA Batteries (4-pack)\n",
+       "186846                        iPhone\n",
+       "186847                        iPhone\n",
+       "186848        34in Ultrawide Monitor\n",
+       "186849          USB-C Charging Cable\n",
+       "Name: Product, Length: 186305, dtype: object"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data['Product']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "That creates a pandas series, so indexing a dataframe is similar to indexing a list as we saw in last weeks lecture, where we looked at list.\n",
+    "Now supposed we want to index more that one column, how do we do it. \n",
+    "Well it’s simple, we simply use `[[ ]]`, the first square bracket signifies that you’re passing a list of columns, while the second just extracts the columns from the dataframe. Let’s look at an example\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Product</th>\n",
+       "      <th>Quantity Ordered</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>USB-C Charging Cable</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>Bose SoundSport Headphones</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>Google Phone</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>Wired Headphones</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>Wired Headphones</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>...</th>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>186845</th>\n",
+       "      <td>AAA Batteries (4-pack)</td>\n",
+       "      <td>3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>186846</th>\n",
+       "      <td>iPhone</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>186847</th>\n",
+       "      <td>iPhone</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>186848</th>\n",
+       "      <td>34in Ultrawide Monitor</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>186849</th>\n",
+       "      <td>USB-C Charging Cable</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>186305 rows × 2 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                           Product Quantity Ordered\n",
+       "0             USB-C Charging Cable                2\n",
+       "2       Bose SoundSport Headphones                1\n",
+       "3                     Google Phone                1\n",
+       "4                 Wired Headphones                1\n",
+       "5                 Wired Headphones                1\n",
+       "...                            ...              ...\n",
+       "186845      AAA Batteries (4-pack)                3\n",
+       "186846                      iPhone                1\n",
+       "186847                      iPhone                1\n",
+       "186848      34in Ultrawide Monitor                1\n",
+       "186849        USB-C Charging Cable                1\n",
+       "\n",
+       "[186305 rows x 2 columns]"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data[['Product', 'Quantity Ordered']]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "See how we were able to extract the two columns from the dataframe.\n",
+    "Now let’s see some other function that we can also use.\n",
+    "\n",
+    "+ Say you want to see the list of columns in your dataset, you simply use `columns` function.\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Index(['Order ID', 'Product', 'Quantity Ordered', 'Price Each', 'Order Date',\n",
+       "       'Purchase Address'],\n",
+       "      dtype='object')"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.columns"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "+ If you want to see the number of rows and columns in your dataset, you simply use the `shape` function.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(186305, 6)"
+      ]
+     },
+     "execution_count": 16,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.shape"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Notice that in our data, we have a `date and time column` called `Order Date`. But the column isn’t really in the right format; so we have to convert the column into the appropriate ‘date and time column’, so that it will be easier to work with. To do that, we use the `to_datetime()` function from the pandas library.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "###### Converting the `Order Date` to the normal date-time format"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data['Order Date'] = pd.to_datetime(data['Order Date'], errors = 'coerce')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Order ID</th>\n",
+       "      <th>Product</th>\n",
+       "      <th>Quantity Ordered</th>\n",
+       "      <th>Price Each</th>\n",
+       "      <th>Order Date</th>\n",
+       "      <th>Purchase Address</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>176558</td>\n",
+       "      <td>USB-C Charging Cable</td>\n",
+       "      <td>2</td>\n",
+       "      <td>11.95</td>\n",
+       "      <td>2019-04-19 08:46:00</td>\n",
+       "      <td>917 1st St, Dallas, TX 75001</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>176559</td>\n",
+       "      <td>Bose SoundSport Headphones</td>\n",
+       "      <td>1</td>\n",
+       "      <td>99.99</td>\n",
+       "      <td>2019-04-07 22:30:00</td>\n",
+       "      <td>682 Chestnut St, Boston, MA 02215</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>176560</td>\n",
+       "      <td>Google Phone</td>\n",
+       "      <td>1</td>\n",
+       "      <td>600</td>\n",
+       "      <td>2019-04-12 14:38:00</td>\n",
+       "      <td>669 Spruce St, Los Angeles, CA 90001</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>176560</td>\n",
+       "      <td>Wired Headphones</td>\n",
+       "      <td>1</td>\n",
+       "      <td>11.99</td>\n",
+       "      <td>2019-04-12 14:38:00</td>\n",
+       "      <td>669 Spruce St, Los Angeles, CA 90001</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>176561</td>\n",
+       "      <td>Wired Headphones</td>\n",
+       "      <td>1</td>\n",
+       "      <td>11.99</td>\n",
+       "      <td>2019-04-30 09:27:00</td>\n",
+       "      <td>333 8th St, Los Angeles, CA 90001</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  Order ID                     Product Quantity Ordered Price Each  \\\n",
+       "0   176558        USB-C Charging Cable                2      11.95   \n",
+       "2   176559  Bose SoundSport Headphones                1      99.99   \n",
+       "3   176560                Google Phone                1        600   \n",
+       "4   176560            Wired Headphones                1      11.99   \n",
+       "5   176561            Wired Headphones                1      11.99   \n",
+       "\n",
+       "           Order Date                      Purchase Address  \n",
+       "0 2019-04-19 08:46:00          917 1st St, Dallas, TX 75001  \n",
+       "2 2019-04-07 22:30:00     682 Chestnut St, Boston, MA 02215  \n",
+       "3 2019-04-12 14:38:00  669 Spruce St, Los Angeles, CA 90001  \n",
+       "4 2019-04-12 14:38:00  669 Spruce St, Los Angeles, CA 90001  \n",
+       "5 2019-04-30 09:27:00     333 8th St, Los Angeles, CA 90001  "
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Next, we create a column for the month, to do that, I have to index the month column `data[’Month’]` then I set it equal to the month value in the `Order Date` column by indexing it, an calling the value `data[‘Order Date’].dt.month`.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "###### Creating a column for the Month"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data['Month'] = data['Order Date'].dt.month"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Having created the column for the month, we can also create another one for the hour, by simply following the same method we used for the month.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data['Hour'] = data['Order Date'].dt.hour"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Order ID</th>\n",
+       "      <th>Product</th>\n",
+       "      <th>Quantity Ordered</th>\n",
+       "      <th>Price Each</th>\n",
+       "      <th>Order Date</th>\n",
+       "      <th>Purchase Address</th>\n",
+       "      <th>Month</th>\n",
+       "      <th>Hour</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>176558</td>\n",
+       "      <td>USB-C Charging Cable</td>\n",
+       "      <td>2</td>\n",
+       "      <td>11.95</td>\n",
+       "      <td>2019-04-19 08:46:00</td>\n",
+       "      <td>917 1st St, Dallas, TX 75001</td>\n",
+       "      <td>4.0</td>\n",
+       "      <td>8.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>176559</td>\n",
+       "      <td>Bose SoundSport Headphones</td>\n",
+       "      <td>1</td>\n",
+       "      <td>99.99</td>\n",
+       "      <td>2019-04-07 22:30:00</td>\n",
+       "      <td>682 Chestnut St, Boston, MA 02215</td>\n",
+       "      <td>4.0</td>\n",
+       "      <td>22.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>176560</td>\n",
+       "      <td>Google Phone</td>\n",
+       "      <td>1</td>\n",
+       "      <td>600</td>\n",
+       "      <td>2019-04-12 14:38:00</td>\n",
+       "      <td>669 Spruce St, Los Angeles, CA 90001</td>\n",
+       "      <td>4.0</td>\n",
+       "      <td>14.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>176560</td>\n",
+       "      <td>Wired Headphones</td>\n",
+       "      <td>1</td>\n",
+       "      <td>11.99</td>\n",
+       "      <td>2019-04-12 14:38:00</td>\n",
+       "      <td>669 Spruce St, Los Angeles, CA 90001</td>\n",
+       "      <td>4.0</td>\n",
+       "      <td>14.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>176561</td>\n",
+       "      <td>Wired Headphones</td>\n",
+       "      <td>1</td>\n",
+       "      <td>11.99</td>\n",
+       "      <td>2019-04-30 09:27:00</td>\n",
+       "      <td>333 8th St, Los Angeles, CA 90001</td>\n",
+       "      <td>4.0</td>\n",
+       "      <td>9.0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  Order ID                     Product Quantity Ordered Price Each  \\\n",
+       "0   176558        USB-C Charging Cable                2      11.95   \n",
+       "2   176559  Bose SoundSport Headphones                1      99.99   \n",
+       "3   176560                Google Phone                1        600   \n",
+       "4   176560            Wired Headphones                1      11.99   \n",
+       "5   176561            Wired Headphones                1      11.99   \n",
+       "\n",
+       "           Order Date                      Purchase Address  Month  Hour  \n",
+       "0 2019-04-19 08:46:00          917 1st St, Dallas, TX 75001    4.0   8.0  \n",
+       "2 2019-04-07 22:30:00     682 Chestnut St, Boston, MA 02215    4.0  22.0  \n",
+       "3 2019-04-12 14:38:00  669 Spruce St, Los Angeles, CA 90001    4.0  14.0  \n",
+       "4 2019-04-12 14:38:00  669 Spruce St, Los Angeles, CA 90001    4.0  14.0  \n",
+       "5 2019-04-30 09:27:00     333 8th St, Los Angeles, CA 90001    4.0   9.0  "
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Now we are all set to start doing analysis.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Step 3: Data Analysis"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Here we are going to be answering questions like:\n",
+    "    \n",
+    "+ What was the best month for sales? how much was earned that month?\n",
+    "+ What Product sold more?\n",
+    "+ What time should we display advertisements to maximize likelihood of customer's buying product?\n",
+    "So we start with the first question, but we notice that we don’t have a ‘Sales’ column in our dataset, but we know that `Sales = Price * quantity ordered`, so we create it.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Order ID              0\n",
+       "Product               0\n",
+       "Quantity Ordered      0\n",
+       "Price Each            0\n",
+       "Order Date          355\n",
+       "Purchase Address      0\n",
+       "Month               355\n",
+       "Hour                355\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.isnull().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data.dropna(how='any', inplace=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Order ID            0\n",
+       "Product             0\n",
+       "Quantity Ordered    0\n",
+       "Price Each          0\n",
+       "Order Date          0\n",
+       "Purchase Address    0\n",
+       "Month               0\n",
+       "Hour                0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.isnull().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data['Sales'] = data['Quantity Ordered'].astype('int') * data['Price Each'].astype('float')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "> ### 1. What was the best month for sales? how much was earned that month?\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "To answer the above question, we simply use the `‘groupby()’` function which is used to split data based on some criteria.\n",
+    "So to find out the months that made the most sales, we group the months based on the sales using the `groupby()` function and sum it.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Month\n",
+       "1.0     1.822257e+06\n",
+       "2.0     2.202022e+06\n",
+       "3.0     2.807100e+06\n",
+       "4.0     3.390670e+06\n",
+       "5.0     3.152607e+06\n",
+       "6.0     2.577802e+06\n",
+       "7.0     2.647776e+06\n",
+       "8.0     2.244468e+06\n",
+       "9.0     2.097560e+06\n",
+       "10.0    3.736727e+06\n",
+       "11.0    3.199603e+06\n",
+       "12.0    4.613443e+06\n",
+       "Name: Sales, dtype: float64"
+      ]
+     },
+     "execution_count": 26,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.groupby('Month')['Sales'].sum()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Looking at the result, it is obvious to see that December has the highest number of sales. Now to make a plot of our results, we simply import the `‘pyplot’` function from a library called `‘matplotlib’` .\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import matplotlib.pyplot as plt"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "After importing the library, we can simply make our plot by using the `‘plot()’`. Inside the plot, we can specify the kind of plot we want. In this case, we want to make a bar plot so we specify `kind = ‘bar’`.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Text(0, 0.5, 'Sales')"
+      ]
+     },
+     "execution_count": 28,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "data.groupby('Month')['Sales'].sum().plot(kind = 'bar')\n",
+    "plt.ylabel('Sales')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We used `plt.ylabel()` to specify a name for the y-axis.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "> ### 2. What Product sold more?\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "To know what product sold more, is similar to asking for the frequency of each unique product in our dataset. For that reason, we first need to index the product column `data[‘Product’]`. Then we use the value_counts() function to get the frequency table. Finaly, we make a plot using the plot() function.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "USB-C Charging Cable          21903\n",
+       "Lightning Charging Cable      21658\n",
+       "AAA Batteries (4-pack)        20641\n",
+       "AA Batteries (4-pack)         20577\n",
+       "Wired Headphones              18882\n",
+       "Apple Airpods Headphones      15549\n",
+       "Bose SoundSport Headphones    13325\n",
+       "27in FHD Monitor               7507\n",
+       "iPhone                         6842\n",
+       "27in 4K Gaming Monitor         6230\n",
+       "34in Ultrawide Monitor         6181\n",
+       "Google Phone                   5525\n",
+       "Flatscreen TV                  4800\n",
+       "Macbook Pro Laptop             4724\n",
+       "ThinkPad Laptop                4128\n",
+       "20in Monitor                   4101\n",
+       "Vareebadd Phone                2065\n",
+       "LG Washing Machine              666\n",
+       "LG Dryer                        646\n",
+       "Name: Product, dtype: int64"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data['Product'].value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<AxesSubplot:>"
+      ]
+     },
+     "execution_count": 30,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "data['Product'].value_counts().plot(kind = 'bar')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "> ### 3. What time should we display advertisements to maximize likelihood of customer's buying product?\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We tackle this question same way we tacked the first one, by grouping the ‘Hours’, then index the sales and finally making the plot.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "iVBORw0KGgoAAAANSUhEUgAAAXQAAAERCAYAAABrWly6AAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjMuMCwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy86wFpkAAAACXBIWXMAAAsTAAALEwEAmpwYAAAsbUlEQVR4nO3deXxU1d3H8c9vskJWQiArO2ENJEBkcyG4oiDUBdxKa6tVqq1al9bHl8ujrXZ5rFaLrXtFW8UdMOACKCACIiCEQCBsAUI2kkDIQvbz/DGDRQQSkpm5s/zer1demczcmfvjMPPNybnnnivGGJRSSnk/m9UFKKWUcg4NdKWU8hEa6Eop5SM00JVSykdooCullI/QQFdKKR9haaCLyKsiUioiOW3cfoaIbBWRLSLypqvrU0opbyJWzkMXkfOAauB1Y0xqK9umAO8A5xtjDolId2NMqTvqVEopb2BpD90YswKoOP4+EeknIp+IyHoR+VJEBjke+gXwnDHmkOO5GuZKKXUcTxxDfxH4tTFmFHAv8A/H/QOAASLylYisEZFJllWolFIeKNDqAo4nIuHAeOBdETl2d4jjeyCQAmQCycCXIpJqjDns5jKVUsojeVSgY/+L4bAxJv0kjxUAa4wxjcAeEdmOPeC/cWN9SinlsTxqyMUYcwR7WE8HELs0x8PzgImO+2OxD8HstqJOpZTyRFZPW3wLWA0MFJECEbkJuAG4SUQ2AVuAaY7NPwXKRWQr8AVwnzGm3Iq6lVLKE1k6bVEppZTztNpDF5EeIvKFiOQ6Tui58yTbZIpIpYhsdHw97JpylVJKnUpbDoo2AfcYYzaISASwXkQWG2O2nrDdl8aYKW3dcWxsrOndu/cZlPpfNTU1hIWFteu5vkbbwk7bwU7bwc6X22H9+vVlxphuJ3us1UA3xhQBRY7bVSKSCyQBJwb6Genduzfr1q1r13OXLVtGZmZmR3bvM7Qt7LQd7LQd7Hy5HURk76keO6ODoiLSGxgBfH2Sh8eJyCYR+VhEhp5ZiUoppTqqzQdFHSf9LAceN8Z8cMJjkUCLMaZaRC4DnjHGpJzkNW4BbgGIi4sbNXfu3HYVXV1dTXh4eLue62u0Ley0Hey0Hex8uR0mTpy43hiTcbLH2hToIhIEZAGfGmOeasP2+UCGMabsVNtkZGQYHXLpOG0LO20HO20HO19uBxE5ZaC3ZZaLAK8AuacKcxGJd2yHiIx2vK7OEVdKKTdqyyyXs4GZwGYR2ei47wGgJ4Ax5nngauCXItIEHAWuNTrBXSml3Kots1xWAtLKNrOB2c4qSiml1JnzqLVclFJKtZ8GulLKY326pZicA5VWl+E1NNCVUh7p0y3F3PrGeq785yoWZhdZXY5X0EBXSnmcXQerueedTQxPjmJYUhS3v7mB55fvQudanJ6nXeBCKeXnauqbmPXGeoIDbTz/41HEhAVz77ub+NPH29hXUctjU4cSGKB90ZPRQFdKeQxjDL99P5tdB6t546YxJEZ3AuDZa0fQI6Yz/1y2iwOHjvLcDSMJD9H4OpH+mlNKeYxXVu5hYXYR910yiLP7x353v80m/G7SIP545TBW7ixj+vOrKao8amGlnkkDXSnlEdbsLuePH29j0tB4Zk3oe9Jtrhvdk1dvPIv9FbX86Lmv2FKoM2COp4GulLJccWUdv3pzA726dub/pg/HsZLISU0Y0I13Z43DJsKM51fzxfZSN1bq2TTQlWqjqrpGjjY0W12Gz2loauGX/1lPbUMzL/x4FBGhQa0+Z3BCJPNuP5vesWHcPGcd/15zyiXC/YoeVVB+r6XFUFZTT3FlHcWVdZQcqaOoso7iI/+9XVJZR01DM1GdgvjPzWNITYqyumyf8YeFW/l232Geu34kKXERbX5eXGQo79w6jl+/9S0PzsthX0Ut908ahM122pVKfJoGuvJL76zbz9y1+yiurKO0qp6mlu/Pbw60Cd0jQoiLCmVQfAQTBnQjLjKUN1bv5SevruWdW8fRv7tvrrftTh9sKOD11Xu55by+TB6ecMbPDwsJ5MWZo3j0o628uGI3+ytqefqadOcX6iU00JXfOVTTwEPzckjq0omx/boSHxlKfFTo9753DQ8h4CQ9vYuHxDHjhdX8+OWveXfWOHrEdLbgX+AbthRW8j8fbGZs3xh+e8nAdr9OYICNx6YNpVfXzjy+KJfil9bws37+eQKSBrryO2+v2099Uwv/uGEkg+Ijz+i5fbuF88ZNY7jmhdXMfOVr3pk1ju4RoS6q1HdV1jYy69/r6dI5mNnXj+zwiUIiws3n9iW5SyfunLuRv1QYJl3QQnCgfx0m9K9/rfJ7zS2GN1bvZUyfmDMO82MGJ0Ty2s9HU1pVz8yX13K4tsHJVfq2lhbDXW9/S3FlHf/48Uhiw0Oc9tqTUhN47vqRFFQbXli+y2mv6y000JVfWZJbwoHDR7lxfO8Ovc7Inl146ScZ7Cmr4af/+obq+ibnFOgHnlm6gy+2H+Thy4cysmcXp7/+hUPiGB0fwN8/38mug9VOf31PpoGu/MqcVfkkRoVy0ZC4Dr/W2f1jmX39CHIOVHLL6+uoa9Qpja35fFsJzyzdwVUjk/nxmJ4u28/1g4MJDbLxwAeb/WpBLw105TfySqpYtaucG8b2ctriThcPjefJ6cNZtaucX725gcbmFqe8ri/aW17DXXM3MiQhksevSD3tyUMdFR1i44HLBvP1ngreXVfgsv14Gg105TfmrMonONDGdaOd2zO8YkQyv582lCW5pdz77iZaWvynR9hW+ytqufWN9YgIL8wcRWhQgMv3OSOjB6P7xPD4olwOVtW7fH+eQANd+YXKo418sOEAU9MSiQkLdvrrzxzXm/suGcj8jYU8ND/Hr/7MP526xmb+tiSPC59azt7yWp69boTbpnrabMITVwzjaEMzv8/a6pZ9Wk2nLSq/8O66/RxtbO7wwdDTuX1if6rqmnh++S4iQoO4/9JBLtuXpzPGsHhrCY9lbaXg0FGmDE/ggcsGf7ccrrv07x7O7RP78/SSPK4YmcTEgd3dun9300BXPq+lxfDGmr1k9Ori8lP2fzdpINX1jTy/fBeRnQK5LbO/S/fniXYdrObRj7ayIu8gA+LCefMXYxjfL7b1J7rIrMy+fJRdyIMf5rD47vPoHOy7sadDLsrnLcsrZW95LT91Ye/8GBHhsampTEtP5C+fbOeN1fku36enqKlv4k8fb2PS31bw7d5DPDxlCAvvONfSMAcICQzgj1cO48Dhozy9OM/SWlzNd39VKeXw2qq9xEWGMCk13i37s9mEJ6enUVPfzEPztxAeGsgVI5Ldsm8rGGNYsKmQJxblUnKknumjkvntpEF0i3DeCUMddVbvGK4f05NXVu5haloSw5J9c3E17aErn7brYDUr8g5yw5heBLnxOpRBATZmXz+C8f26cs87m/jN2xvJK6ly2/7dJbfoCNe8uIY7526ke0QoH9w2nv+bnuZRYX7M7yYNomt4CPd/kE2Tj04v1UBXPu2N1XsJDnD+VMW2CA0K4KWfZPCzs/vwSU4xFz+9gpvnrGPDvkNur8XZKo828r8LtjDl7yvZUVLFE1cMY97tZ7vkzE9nieoUxKNTh7Kl8Aj/+irf6nJcQodclM+qrm/ivfUFTB6eYFmPMSwkkIemDOFXE/vz2qp8XluVz5X/KGFs3xhuy+zPuSmxLj3BxhU27T/Mz1/7hkO1Ddwwphf3XDyA6M7OnwrqCpemxnPh4DieWpzHpNR4n1stU3voyme9v76A6vomtxwMbU2XsGB+c9EAVt1/Pg9OHkx+WS0/eXUtl89eycLsIpq95GSkow3N3PX2RkICbSz41Tn8/kepXhPm4DhoPW0oNoEH5/ne+QIa6MontbQY5qzOJ61HNOk9oq0u5zthIYHcfG5flv82kz9fNYya+mZuf3MDFz21nHe+2U9Dk2eP7f7l023sKavhyelpXnvVpsToTtx3yUCW5x1kwaZCq8txKg105ZNW7ixj98Eabhzfy+pSTiokMIBrzurJkrsn8Nz1I+kUHMBv389mwv99wSsr91Db4HmrN67ZXc6/vsrnJ+N6Mb6/tVMRO2rmuN6k9YjmsY+2+tTyxxroyifNWZVPbHgwlw0788uauVOATZg8PIGsX5/DnJ+PpmdMZ36ftZXxf/qcT3KKrC7vOzX1Tdz33iZ6de3sE2fABtiEP105jMqjjTyxKNfqcpxGA135nH3ltXy+vZTrR/ckJND1i0A5g4gwYUA33r51HO//cjy9u4Zx23828M66/VaXBsAfP86l4NBRnpye5jNnWg5OiOQX5/XlnXUFrNpVZnU5TqGBrnzO66vzCRDhhrGeOdzSmlG9uvDmL8Zwdv9YfvteNq+s3GNpPSt3lPHvNfu46ew+nNU7xtJanO3OC1Lo1bUzD3yw2SfWs9dAVz6ltqGJd9btZ1JqPHGR3nutz87Bgbz80wwuTY3n91lbeXpxniUzMo7UNfLb9zbRr1sY93bgQs6eKjQogMd/NIz88lpmf77T6nI6TANd+ZQPvz3Akboml66q6C4hgQH8/boRzMhI5pmlO3j0o61uX2v9D1lbKT5Sx5PT09yyhrkVzkmJ5cqRSTy/fBelVXVWl9MhrQa6iPQQkS9EJFdEtojInSfZRkTkWRHZKSLZIjLSNeUqdWrGGOasymdoYiSjennuGYtnIjDAxp+vGs5N5/ThtVX53Pee+05b/3xbCe+sK+DWCf0Y4cFngDrDbZn9aGoxLMz2nAPR7dGWHnoTcI8xZjAwFrhdRIacsM2lQIrj6xbgn06tUqk2WL27nLySam4c39vrzr48HRHhwcmDufuiAby/oYDb39xAfZNrx3sP1zZw//ubGRgXwV0Xprh0X56gf/cIBidEev289FYD3RhTZIzZ4LhdBeQCSSdsNg143ditAaJFxLPniymfM2dVPjFhwVyelmh1KU4nItxxQQqPXD6ET7eUcNNr66ipd91c9Uc/2kpFTQN/nZHmNTOFOmpqWiLf7jvMvvJaq0tpNzmTAy0i0htYAaQaY44cd38W8CdjzErHz0uB3xlj1p3w/Fuw9+CJi4sbNXfu3HYVXV1dTXh4eLue62u0Lez2lVXzyDphct8grh7gPaeit8dXBxp5eXMDfaNs3J0RSljQf/8accb7YX1JE3//tp5p/YK4IsU727I97VB2tIV7lx/lqpQgLu/nuf/uiRMnrjfGZJzssTZPKBWRcOB94K7jw/zYwyd5yg9+UxhjXgReBMjIyDCZmZlt3f33LFu2jPY+19doW9jd9sJn2GxNPDDjXLdf5szdMoFROcXc8da3/H1LAK/fNJruEfYZPR19P1TUNHDv08sZmhjJkz8/261LDjtTe9thbv4qNh9p5K+ZE5xflBu06X9LRIKwh/l/jDEfnGSTAqDHcT8nA949GKW8Rl1jM8sLGrl4SJzPh/kxk1LjefXGs9hbXsuM51ezv8I5wwQPzcuh8mgjf52R5rVh3hHT0hPJK6lmW/GJfVbv0JZZLgK8AuQaY546xWYLgJ84ZruMBSqNMd59uFh5jQUbC6lpxCNWVXSnc1Ji+ffNY6ioaWD686vZWdqxC2h8tKmQhZuLuOvCAQyKj3RSld7lsmEJBNiE+Ru9sz/all/BZwMzgfNFZKPj6zIRmSUisxzbLAJ2AzuBl4DbXFOuUt9njOG1Vfkkhwtj+vjWWYxtMapXF96+dRxNLYYZL6xhXXETR+oaz/h1SqvqeGh+Dmk9orn1vL4uqNQ7dA0P4Zz+sXy0qdArl9ZtdQzdcaDztHPAjP1ffruzilKqrZblHWRr0RF+nhrsU1MVz8TghEjenTWOma98zeyNR/nHps8YnBDJmD5dGd0nhtF9YogJO/VBPmMMD3yQw9GGZv46PY1APxxqOd7UtETueXcTG/Yd9rrzGXxjlR3ll4wx/G3JDpK7dGJ8on+G+TF9YsNYcvcE/rVgGXWRPVi7p4L/fL2XV7+yrwMzIC7cEe5dGdMn5nvLInyw4QBLckt4cPJg+nfXGVMXD40j5EMbCzYe0EBXyl2W5x1k0/7D/PHKYQTW7ra6HMuFBgUwuGsAmZkDAKhvamZzQSVf76lg7Z4KPtxwgH+v2QdA766dGd0nhvQeXfjjx7lk9OrCz87uY2X5HiMiNIgLBndn4eYiHpoyxKv+YtFAV17JGMMzS3eQFN2Jq0Yms2qlBvqJQgIDyOgdQ0bvGG6fCE3NLWwtOsLaPRWs2V3Bp1vsp/Z3CgrgyelpBNj8+6+c401NS2TR5mJW7SrnvAHdrC6nzTTQlVdasaOMb/cd5okrhhEc6D09KCsFBtgYnhzN8ORobj63Ly0thu0lVQTahN6xYVaX51EyB3YnIiSQBZsKvSrQ9ZOgvI4xhmeW5JEU3YmrRyVbXY7XstmEwQmRpMRFWF2KxwkNCuCS1Hg+zSn2qnXSNdCV11m5s4wN+w7zy8x+2jtXLjM1LZGq+iaWbS+1upQ200+D8ir23vkOEqJCmZ6hvXPlOuP7dSU2PNirTjLSQFde5aud5azbe4jbJvb3m1UAlTUCA2xMHpbA0m2lVLXjZC0raKArr2Gf2ZJHQlQoM7R3rtxganoSDU0tfLalxOpS2kQDXXmN1bvK+Sb/EL/M7Ke9c+UWI3tGk9ylE/O95MIXGujKKxw7KzQ+MpQZGT1af4JSTiAiTE1L5KudZZRV11tdTqs00JVXWL27nLX5Ffwys5/PXqxYeaap6Yk0txgWbfb8BWQ10JVXeGbJDuIiQ7jmLO2dK/caFB/JgLhwFnjBbBcNdOXxVu8q5+s9FcyaoL1zZY1p6Ums23uIgkOefb1RDXTl8Z5Zmkf3iBCuG93T6lKUn7p8uP3C4x9t8uxhFw105dHW7C5nzW7tnStr9ezamRE9o5m/8YDVpZyWBrryaM8s2UG3iBCuH6O9c2WtqWmJbCuuYkdJxy7150oa6Mpjrd1Twerd5dx6Xl/tnSvLTR6egE1ggQfPSddAVx7rmaV5xIaHcMOYXlaXohTdI0IZ3y+W+Rs993qjGujKI32TX8FXO8uZNaEvnYK1d648w9S0RPZV1LKpoNLqUk5KA115pGeW7CA2PFh758qjXJIaT3CAzWMPjmqgK4+zfm8FK3eWcct52jtXniWqUxCZA7uRlV1Ec4vnDbtooCuP87clO+gaFsyPx2rvXHmeaelJHKyqZ83ucqtL+QENdOVR1u89xJc77L3zzsF6yVvleS4Y3J2w4ACPXApAA115lGeW7iAmLJiZ47R3rjxTaFAAFw+NZ1FOEfVNnnW9UQ105TFyDlSyIu+g9s6Vx5uankhVXRPLtx+0upTv0UBXHmPBpkKCAoTrztKzQpVnO6d/LF06B3ncSUYa6MojGGNYmF3EuSndiOocZHU5Sp1WUICNycMTWJJbQk19k9XlfEcDXXmEDfsOc+DwUaYMT7C6FKXaZGpaEnWNLXy2tdjqUr6jga48QlZ2IcGBNi4aEmd1KUq1SUavLiRGhTLfg2a7aKAry7U4Lu+VOaAbEaE63KK8g80mTE1P4ssdnnO9UQ10Zblv8isoOVLPlLREq0tR6oz8aIT9eqMLsz3jwhca6MpyWdlFhAbZuGBQd6tLUeqMDIqPZFB8BPM8ZG0XDXRlqabmFj7OKeKCQXGEhejcc+V9pqYn8u2+w+wrt/56oxroylJf76mgrLpBZ7corzXVMVToCSswthroIvKqiJSKSM4pHs8UkUoR2ej4etj5ZSpflZVdSFhwABN1uEV5qeQunRndO4Z5Gw9YfuGLtvTQXwMmtbLNl8aYdMfXYx0vS/mDxuYWPs4p5sIhcXqJOeXVpqYnsutgDVsKj1haR6uBboxZAVS4oRblZ77aWcbh2kamDNfZLcq7TR6WQKBNLB92cdZRqHEisgkoBO41xmw52UYicgtwC0BcXBzLli1r186qq6vb/Vxf481t8fLmejoFAsVbWVaa26HX8uZ2cCZtBzsr2iG1q4131+YzrnMJNhG37vs7xphWv4DeQM4pHosEwh23LwN2tOU1R40aZdrriy++aPdzfY23tkVdY5NJfeQTc/fbG53yet7aDs6m7WBnRTss2HjA9Ppdlvlqx0GX7gdYZ06Rqx2e5WKMOWKMqXbcXgQEiUhsR19X+bYv88qoqmtiSprOblG+4cLBcYQFB1i6FECHA11E4kXsf1+IyGjHa3retZmUR8nKLiS6cxDn9Nff/co3dAoO4BLHhS/qGq258EVbpi2+BawGBopIgYjcJCKzRGSWY5OrgRzHGPqzwLWOPwuUOqm6xmYWby1h0tB4ggL0VAjlO6aNSKKqroll20st2X+rB0WNMde18vhsYLbTKlI+b9n2UmoamnV2i/I5Z/frSmx4MPM3FjIp1f3Dido9Um73UXYRXcOCGds3xupSlHKqwAAbU4YnsnRbKUfqGt2+fw105Va1DU18nlvKpcPiCdThFuWDpqUn0tDUwieb3X/hC/1EKbdamlvK0UYdblG+K71HNL26drZkBUYNdOVWWdmFdI8I4azeOtyifJOIMC09idW7yyk5UufWfWugK7epqmvki+0HuWxYAgE2i86kU8oNpqUnYgx8tMm9c9I10JXbLMktoaGphcv1ZCLl4/p1C2dYUpTbh1000JXbZG0qIjEqlBE9ulhdilIuNy09kZwDR9hZWu22fWqgK7eorG1kxY6DTB6egE2HW5QfuDwtERFY4MZeuga6cotPtxbT2Gx0dovyG3GRoYzv15V5GwvdduELDXTlFlnZRfSM6czw5CirS1HKbaalJ7GvopZv9x92y/400JXLVdQ08NXOMiYPT0CsWidaKQtMSo0nONDGAjetwKiBrlzuk5ximluMXgha+Z3I0CAuGNSdrOxCmppbXL4/DXTlclnZhfSNDWNIQqTVpSjldtPSkyirbmDlzjKX70sDXbnUwap61uwuZ4oOtyg/NXFQNyJDA90y7KKBrlzq45wiWgxMSdPZLco/hQQGcNmwBD7dUszRBtde+EIDXblU1qYiBsSFMyAuwupSlLLM1PREahqaWZxb4tL9aKArlymurOObvRU691z5vbF9uhIfGcr8b117kpEGunKZRZuLMAad3aL8ns0mTE1PZHneQQ7VNLhuPy57ZeX3srILGZIQSd9u4VaXopTlpqYl0tRiWLi5yGX70EBXLnHg8FE27DvMFF1ZUSkAhiZG0r97OPNduLaLBrpyiYXZ9ilaU4bp+LlSYL/wxY/SE/km/xAFh2pdsg8NdOUSWdlFpCVH0bNrZ6tLUcpjTEtPAmCBiy58oYGunG5veQ3ZBZVM1oOhSn1Pj5jO3HpeX4YmumaRukCXvKrya1nZ9oM+k3W6olI/8D+XDXbZa2sPXTldVnYRI3tGkxTdyepSlPIrGujKqXYdrCa36IieTKSUBTTQlVMtzC5CBB0/V8oCGujKqbKyCzmrdwxxkaFWl6KU39FAV06TV1JFXkm1nuqvlEU00JXTZG0qxCZwaaoGulJW0EBXTmGMISu7iLF9u9ItIsTqcpTySxroyilyi6rYXVajs1uUspAGunKKrOxCAmzCpNR4q0tRym9poKsOOzbcMr5fV2LCgq0uRym/1Wqgi8irIlIqIjmneFxE5FkR2Ski2SIy0vllKk+2+UAl+ypquVyHW5SyVFt66K8Bk07z+KVAiuPrFuCfHS9LeZOs7CKCAoRLhupwi1JWajXQjTErgIrTbDINeN3YrQGiRUTnrfkJYwwLs4s4N6UbUZ2DrC5HKb/mjNUWk4D9x/1c4LjvB9dZEpFbsPfiiYuLY9myZe3aYXV1dbuf62usboudh5s5cLiOy3o0W1qH1e3gKbQd7Py1HZwR6HKS+8zJNjTGvAi8CJCRkWEyMzPbtcNly5bR3uf6GqvbYsVHWwkO2Muvr8okMtS6HrrV7eAptB3s/LUdnDHLpQDocdzPyYBrLsehPEpLi2HR5iImDOxmaZgrpeycEegLgJ84ZruMBSqNMa67rLXyGOv2HqL4SJ2u3aKUh2h1yEVE3gIygVgRKQAeAYIAjDHPA4uAy4CdQC3wM1cVqzxLVnYhoUE2LhwcZ3UpSinaEOjGmOtaedwAtzutIuUVmlsMizYXc/6g7oSF6JUMlfIEeqaoapev95RTVl3P5GF6MpFSnkIDXbVLVnYRnYMDOH9Qd6tLUUo5aKCrM9bU3MInOcVcMDiOTsEBVpejlHLQQFdnbNWucipqGnR2i1IeRgNdnbGs7EIiQgKZMKCb1aUopY6jga7OSENTC59uKeGiIXGEBulwi1KeRANdnZGvdpZRebSRyTrcopTH0UBXZ+Sj7EIiQwM5N0WHW5TyNBroqs3qGptZvKWES4bGExyobx2lPI1+KlWbrcg7SFV9E1PS9GQipTyRBrpqs4Wbi+jSOYjx/bpaXYpS6iQ00FWb1DU2s2RrCZNS4wkK0LeNUp5IP5mqTb7YVkpNQzNT9ELQSnksDXTVJlnZRcSGBzOmT4zVpSilTkEDXbWqpr6JpdtKuDQ1gUAdblHKY+mnU7Vq6bZS6hpbdO0WpTycBrpq1QcbCugeEUJGbx1uUcqTaaCr0/p23yGWbT/IT8f3JsAmVpejlDoNrwv0mvomPt/XiP3Kd8rVnlqcR0xYMDeO7211KUqpVnhdoC/aXMTrWxuYv7HQ6lJ83jf5FXy5o4xZE/rqdUOV8gJeF+hXjUymT5SNxxflUlXXaHU5Pu2vn22nW0QIM8f2troUpVQbeF2g22zCzCHBlFXX87clO6wux2et2lnGmt0V3JbZTy8zp5SX8LpAB+gbFcB1o3vy2qp8thUfsbocn2OM4a+L80iICuW60T2tLkcp1UZeGegA9108kIjQQB6ev0UPkDrZ8ryDrN97iNsn9terEinlRbw20LuEBfO7SYNYu6dCD5A6kTGGpxbnkdylEzMyelhdjlLqDHhtoANck9GDtB7ReoDUiZbklpJdUMkd56foRSyU8jJe/Ym12YTfTxuqB0idpKXF3jvv3bUzV45MsrocpdQZ8upABxieHK0HSJ3kky3F5BYd4c4LU3QRLqW8kE98au+7eCCRoYE8PE8PkLZXc4vh6cV59O8eztQ07Z0r5Y18ItC7hAXz20mDWJuvB0jbKyu7kB2l1dx1YYqu2aKUl/KJQIfvHyA9ogdIz0hTcwt/W7KDQfERXJaqS+Qq5a18JtC/d4B0sR4gPRMffnuAPWU1/OaiAdi0d66U1/KZQIf/HiCds1oPkLZVY3MLz36+g2FJUVw8JM7qcpRSHeBTgQ56gPRMvbuugP0VR7n7ogGIaO9cKW/mc4H+3Rmk+RXM23jA6nI8Wn1TM7M/38GIntFkDuxmdTlKqQ5qU6CLyCQR2S4iO0Xk/pM8nikilSKy0fH1sPNLbbsZjgOkTyzapgdIT2Pu2v0UVtZxz0UDtXeulA9oNdBFJAB4DrgUGAJcJyJDTrLpl8aYdMfXY06u84zoAdLW1TU289wXOxndJ4az+3e1uhyllBO0pYc+GthpjNltjGkA5gLTXFtWxw1PjuZ6PUB6Sv9es5fSqnru0bFzpXyGtHbgUESuBiYZY252/DwTGGOM+dVx22QC7wMFQCFwrzFmy0le6xbgFoC4uLhRc+fObVfR1dXVhIeHt75dg+H+L2tJDLfxP6NDfTK42toWx6trMty3opaeETbuO6uTiypzr/a0gy/SdrDz5XaYOHHiemNMxskea8uFIk+Wgif+FtgA9DLGVIvIZcA8IOUHTzLmReBFgIyMDJOZmdmG3f/QsmXLaOtzq6P3cf8HmzkcncIVI5LbtT9PdiZtccw/lu2kqmE7j80Yy6heXVxTmJu1px18kbaDnb+2Q1uGXAqA4xfGTsbeC/+OMeaIMabacXsRECQisU6rsgOOHSB9fKEeIAWoqmvkxRW7yRzYzWfCXCll15ZA/wZIEZE+IhIMXAssOH4DEYkXx3iGiIx2vG65s4ttD5tN+MO0VMpr6vnjom1Wl2O5V1fmc7i2kbsvGmB1KUopJ2s10I0xTcCvgE+BXOAdY8wWEZklIrMcm10N5IjIJuBZ4FrjQWf1DEuO4hfn9uWttftYkXfQ6nIsU3Colpe+3M1FQ+IYnhxtdTlKKSdryxj6sWGURSfc9/xxt2cDs51bmnPdfdEAluaWcP/72Xzym/OIDA2yuiS3am4x3P3OJgAennKyWadKKW/nc2eKnkpoUABPTk+j+EgdTyzMtboct3v5y92s3VPBI5cPoUdMZ6vLUUq5gN8EOsCInl24dUI/5n6zn2XbS60ux222Fh7hyc+2M2loPFeP8r2ZPkopO78KdIC7LkxhQFw497+/mcqjvj/rpa6xmbve/pbozsE8ceUwn5yLr5Sy87tADwm0D70crK7n91lbrS7H5Z78dDt5JdX85erhxIQFW12OUsqF/C7Qwb4swG2Z/XhvfQFLc0usLsdlVu0s4+WVe5g5thcTB3a3uhyllIv5ZaAD/Pr8FAbFR/A/H2zmcG2D1eU4XWVtI/e8u4m+sWE8cNlgq8tRSrmB3wZ6cKCNJ6enUVHTwKMf+d7Qy8MLcjhYVc/T16TTKTjA6nKUUm7gt4EOkJoUxe0T+/Phtwf4bEux1eU4zYJNhczfWMgdF6SQ1iPa6nKUUm7i14EOcPvE/gxJiOSBD3M4VOP9Qy+Fh4/y4IebGdHTfpxAKeU//D7Qjw29VB5t4JEFP1jx16u0tBjue28TTS2Gp2ekExjg9/+9SvkV/cQDQxIjueP8FBZsKuTjzUVWl9Nu/1qVz1c7y3loyhB6x4ZZXY5Sys000B1mZfZjWFIUD87Loby63upyztj24ir+/Mk2Lhwcx7Vn9Wj9CUopn6OB7hAUYB96qapr4uH53jX0Ut/UzF1vbyQiJJA/XaVngyrlrzTQjzMwPoI7L0xh4eYisrILW3+Ch3h68Q5yi47w56uGExseYnU5SimLaKCf4Nbz+pKWHMVD8+zzuD3d9opmXlixi+tG9+DCIXFWl6OUspAG+gkCHUMvNQ3NPDhvMx50nY4fqKpr5MXsenrFdObBybrGuVL+TgP9JFLiIrjnogF8uqWEf32V75GhbozhkQVbqKgzPHVNOmEhbbpWiVLKh2kKnMLN5/Zl5c4yHsvaysLNRTw6dSipSVFWl0V9UzPzNxbyypd72F5SxdR+QYzsqRd7VkppoJ9SgE2Y87PRvLe+gD9/so3LZ6/k2rN6cu/FA+hqwYHHQzUN/OfrvcxZvZeDVfUMio/gyelpxBzZ4fZalFKeSQP9NGw2YcZZPbgkNZ5nl+5gzqp8FmYXcvdFA/jx2F5uORNzT1kNr6zczXvrC6hrbGHCgG78YkZfzu7fFRFh2bKdLq9BKeUdNNDbIKpTEA9NGcK1Z/Xg0Y+28r8fbeWttft5ZOoQxveLdfr+jDGs3VPBS1/uYem2EoJsNq4YkcRN5/ZhQFyE0/enlPINGuhnICUugjduGs2nW0r4w8KtXP/S10welsADkweTFN2pw6/f2NzCxznFvPzlbrILKunSOYhfT+zPzHG96Rah88uVUqengX6GRIRJqfFkDuzGiyt2849lO1m6rYTbMvtzy3l9CQ1q+9rjzS2G0qo6iirrWJdfwZxVezlw+Ch9Y8N4/IpUrhyRrGuZK6XaTAO9nUKDArjjghSuGpXME4tyeWpxHu+s28+Dk4dwydA4WgwcrKqnsPIoxZV1FB62fy+qrKOo8ihFlXWUVtXT3PLfKZFj+sTw6NShnD+oOzabnr6vlDozGugdlBTdieeuH8kNY8p4dMFWZv17PbHhwRyqbfxeWAOEBtlIjOpEQnQo4/vFkhgdSnxUKIlRnejVtTN9u4Vb9K9QSvkCDXQnGd8vloV3nMNb3+xn0/7DxEeGkhAdSkJUKAlRnUiICiWqU5AunKWUchkNdCcKDLAxc2wvZo7tZXUpSik/pKf+K6WUj9BAV0opH6GBrpRSPkIDXSmlfIQGulJK+QgNdKWU8hEa6Eop5SM00JVSykeIVZdXE5GDwN52Pj0WKHNiOd5M28JO28FO28HOl9uhlzGm28kesCzQO0JE1hljMqyuwxNoW9hpO9hpO9j5azvokItSSvkIDXSllPIR3hroL1pdgAfRtrDTdrDTdrDzy3bwyjF0pZRSP+StPXSllFIn0EBXSikf4XWBLiKTRGS7iOwUkfutrscqIpIvIptFZKOIrLO6HncSkVdFpFREco67L0ZEFovIDsf3LlbW6A6naIf/FZEDjvfFRhG5zMoaXU1EeojIFyKSKyJbROROx/1+934ALwt0EQkAngMuBYYA14nIEGurstREY0y6H863fQ2YdMJ99wNLjTEpwFLHz77uNX7YDgBPO94X6caYRW6uyd2agHuMMYOBscDtjkzwx/eDdwU6MBrYaYzZbYxpAOYC0yyuSbmZMWYFUHHC3dOAOY7bc4AfubMmK5yiHfyKMabIGLPBcbsKyAWS8MP3A3hfoCcB+4/7ucBxnz8ywGcisl5EbrG6GA8QZ4wpAvuHHOhucT1W+pWIZDuGZPxiqAFARHoDI4Cv8dP3g7cFupzkPn+dd3m2MWYk9uGn20XkPKsLUh7hn0A/IB0oAv5qaTVuIiLhwPvAXcaYI1bXYxVvC/QCoMdxPycDhRbVYiljTKHjeynwIfbhKH9WIiIJAI7vpRbXYwljTIkxptkY0wK8hB+8L0QkCHuY/8cY84Hjbr98P3hboH8DpIhIHxEJBq4FFlhck9uJSJiIRBy7DVwM5Jz+WT5vAfBTx+2fAvMtrMUyx0LM4Qp8/H0hIgK8AuQaY5467iG/fD943ZmijmlYfwMCgFeNMY9bW5H7iUhf7L1ygEDgTX9qBxF5C8jEvkRqCfAIMA94B+gJ7AOmG2N8+oDhKdohE/twiwHygVuPjSX7IhE5B/gS2Ay0OO5+APs4ul+9H8ALA10ppdTJeduQi1JKqVPQQFdKKR+hga6UUj5CA10ppXyEBrpSSvkIDXTlN0Sk+oSfbxSR2VbVo5SzaaAr1UGOVUCVspwGulKAiPQSkaWORa2WikhPx/2vicjVx21X7fie6ViH+03sJ7UoZblAqwtQyo06icjG436O4b9LR8wGXjfGzBGRnwPP0vqSq6OBVGPMHmcXqlR7aKArf3LUGJN+7AcRuRE4dnGQccCVjttvAH9pw+ut1TBXnkSHXJQ6uWNrYjTh+Jw4FoIKPm6bGncXpdTpaKArZbcK++qdADcAKx2384FRjtvTgCD3lqVU22mgK2V3B/AzEckGZgJ3Ou5/CZggImuBMWivXHkwXW1RKaV8hPbQlVLKR2igK6WUj9BAV0opH6GBrpRSPkIDXSmlfIQGulJK+QgNdKWU8hH/D8rKNvZr5r0lAAAAAElFTkSuQmCC\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "data.groupby('Hour')['Sales'].sum().plot()\n",
+    "plt.grid()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "From this, we know that the best time to display adverts is by 11 or 19"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Product\n",
+       "20in Monitor                  109.99\n",
+       "27in 4K Gaming Monitor        389.99\n",
+       "27in FHD Monitor              149.99\n",
+       "34in Ultrawide Monitor        379.99\n",
+       "AA Batteries (4-pack)           3.84\n",
+       "AAA Batteries (4-pack)          2.99\n",
+       "Apple Airpods Headphones       150.0\n",
+       "Bose SoundSport Headphones     99.99\n",
+       "Flatscreen TV                  300.0\n",
+       "Google Phone                   600.0\n",
+       "LG Dryer                       600.0\n",
+       "LG Washing Machine             600.0\n",
+       "Lightning Charging Cable       14.95\n",
+       "Macbook Pro Laptop            1700.0\n",
+       "ThinkPad Laptop               999.99\n",
+       "USB-C Charging Cable           11.95\n",
+       "Vareebadd Phone                400.0\n",
+       "Wired Headphones               11.99\n",
+       "iPhone                         700.0\n",
+       "Name: Price Each, dtype: object"
+      ]
+     },
+     "execution_count": 32,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "data.groupby('Product')['Price Each'].max()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
